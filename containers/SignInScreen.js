@@ -1,15 +1,35 @@
 import { useNavigation } from "@react-navigation/core";
-import { Button, Text, TextInput, View, TouchableOpacity } from "react-native";
+import {
+  Button,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+} from "react-native";
 
 export default function SignInScreen({ setToken }) {
   const navigation = useNavigation();
   return (
     <View>
-      <View>
-        <Text>Name: </Text>
-        <TextInput placeholder="Username" />
-        <Text>Password: </Text>
-        <TextInput placeholder="Password" secureTextEntry={true} />
+      <View style={styles.signup}>
+        <View style={styles.signuplogo}>
+          <Image
+            style={styles.signupImg}
+            source={require("../assets/logoairbnb.png")}
+            resizeMode="contain"
+          />
+          <Text style={styles.signupText}>Sign in</Text>
+        </View>
+
+        <TextInput style={styles.inputDecoration} placeholder="email" />
+
+        <TextInput
+          style={styles.inputDecoration}
+          placeholder="password"
+          secureTextEntry={true}
+        />
         <Button
           title="Sign in"
           onPress={async () => {
@@ -22,9 +42,39 @@ export default function SignInScreen({ setToken }) {
             navigation.navigate("SignUp");
           }}
         >
-          <Text>Create an account</Text>
+          <Text>No account ? Register</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  signup: {
+    margin: 25,
+  },
+
+  signuplogo: {
+    display: "flex",
+    justifyContent: "center",
+  },
+
+  signupText: {
+    fontSize: 24,
+    color: "black",
+    justifyContent: "center",
+  },
+
+  signupImg: {
+    justifyContent: "center",
+    height: 100,
+    width: 100,
+  },
+  inputDecoration: {
+    borderBottomWidth: 2,
+    borderBottomColor: "pink",
+    paddingBottom: 10,
+    fontSize: 16,
+    marginBottom: 40,
+  },
+});

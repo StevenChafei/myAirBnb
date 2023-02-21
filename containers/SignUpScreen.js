@@ -1,8 +1,25 @@
-import { Button, Text, TextInput, View, StyleSheet, Image } from "react-native";
+import { useNavigation } from "@react-navigation/core";
+
+import {
+  Button,
+  Text,
+  TextInput,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 
 export default function SignUpScreen({ setToken }) {
+  const navigation = useNavigation();
   return (
-    <View style={{ flexDirection: "column", justifyContent: "center" }}>
+    <View
+      style={
+        {
+          /*flexDirection: "column", justifyContent: "center"*/
+        }
+      }
+    >
       <View style={styles.signuplogo}>
         <Image
           style={styles.signupImg}
@@ -44,6 +61,13 @@ export default function SignUpScreen({ setToken }) {
             }}
           />
         </View>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("SignIn");
+          }}
+        >
+          <Text style={styles.account}>Already have an account ? Sign in</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -55,7 +79,6 @@ const styles = StyleSheet.create({
   },
 
   signuplogo: {
-    display: "flex",
     justifyContent: "center",
   },
 
@@ -92,11 +115,16 @@ const styles = StyleSheet.create({
   button: {
     borderWidth: 3,
     borderStyle: "solid",
-    // borderColor: "pink",
+    borderColor: "pink",
     width: 200,
     height: 60,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 40,
+  },
+
+  account: {
+    marginTop: 20,
+    justifyContent: "center",
   },
 });

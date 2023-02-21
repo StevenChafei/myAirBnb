@@ -1,4 +1,6 @@
 import { useNavigation } from "@react-navigation/core";
+import { useState } from "react";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import {
   Button,
@@ -11,63 +13,85 @@ import {
 } from "react-native";
 
 export default function SignUpScreen({ setToken }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const navigation = useNavigation();
+
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.signuplogo}>
-        <Image
-          style={styles.signupImg}
-          source={require("../assets/logoairbnb.png")}
-          resizeMode="contain"
-        />
-        <Text style={styles.signupText}>Sign up</Text>
-      </View>
+    <KeyboardAwareScrollView>
+      <View style={{ flex: 1 }}>
+        <View style={styles.signuplogo}>
+          <Image
+            style={styles.signupImg}
+            source={require("../assets/logoairbnb.png")}
+            resizeMode="contain"
+          />
+          <Text style={styles.signupText}>Sign up</Text>
+        </View>
 
-      <View style={styles.signup}>
-        <TextInput style={styles.inputDecoration} placeholder="email" />
-
-        <TextInput style={styles.inputDecoration} placeholder="username" />
-
-        <TextInput
-          multiline={true}
-          numberOfLines={10}
-          style={styles.inputDecorationText}
-          placeholder="Describe yourself in a few words..."
-        />
-
-        <TextInput
-          style={styles.inputDecoration}
-          placeholder="password"
-          secureTextEntry={true}
-        />
-
-        <TextInput
-          style={styles.inputDecoration}
-          placeholder="confirm password"
-          secureTextEntry={true}
-        />
-
-        <View style={styles.button}>
-          <Button
-            style={styles.buttondetail}
-            title="Sign up"
-            onPress={async () => {
-              const userToken = "secret-token";
-              setToken(userToken);
+        <View style={styles.signup}>
+          <TextInput
+            style={styles.inputDecoration}
+            placeholder="email"
+            value={email}
+            onChangeText={(text) => {
+              setEmail(text);
             }}
           />
-        </View>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("SignIn");
-          }}
-        >
-          <View style={styles.account}>
-            <Text>Already have an account ? Sign in</Text>
+
+          <TextInput style={styles.inputDecoration} placeholder="username" />
+
+          <TextInput
+            multiline={true}
+            numberOfLines={10}
+            style={styles.inputDecorationText}
+            placeholder="Describe yourself in a few words..."
+          />
+
+          <TextInput
+            style={styles.inputDecoration}
+            placeholder="password"
+            secureTextEntry={true}
+            onChangeText={(text) => {
+              setPassword(text);
+            }}
+            value={password}
+          />
+
+          <TextInput
+            style={styles.inputDecoration}
+            placeholder="confirm password"
+            secureTextEntry={true}
+            onChangeText={(text) => {
+              setConfirmPassword(text);
+            }}
+            value={confirmPassword}
+          />
+
+          <View style={styles.button}>
+            <TouchableOpacity
+              style={styles.buttondetail}
+              onPress={async () => {
+                const userToken = "secret-token";
+                setToken(userToken);
+              }}
+            >
+              <Text style={{ fontSize: 24, color: "grey" }}> Sign up</Text>
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("SignIn");
+            }}
+          >
+            <View style={styles.account}>
+              <Text>Already have an account ? Sign in</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </KeyboardAwareScrollView>
   );
 }
 
@@ -114,15 +138,19 @@ const styles = StyleSheet.create({
   },
 
   button: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  buttondetail: {
+    width: 200,
+    height: 60,
     borderWidth: 3,
     borderStyle: "solid",
     borderColor: "#F9585E",
-    width: 200,
-    height: 60,
-    justifyContent: "center",
-    alignItems: "center",
     borderRadius: 40,
-    color: "black",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   account: {

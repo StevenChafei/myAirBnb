@@ -12,7 +12,7 @@ import {
 export default function SignInScreen({ setToken }) {
   const navigation = useNavigation();
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <View style={styles.signup}>
         <View style={styles.signuplogo}>
           <Image
@@ -30,19 +30,25 @@ export default function SignInScreen({ setToken }) {
           placeholder="password"
           secureTextEntry={true}
         />
-        <Button
-          title="Sign in"
-          onPress={async () => {
-            const userToken = "secret-token";
-            setToken(userToken);
-          }}
-        />
+        <View style={styles.button}>
+          <Button
+            style={styles.buttondetail}
+            title="Sign in"
+            onPress={async () => {
+              const userToken = "secret-token";
+              setToken(userToken);
+            }}
+          />
+        </View>
+
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("SignUp");
           }}
         >
-          <Text>No account ? Register</Text>
+          <View style={styles.account}>
+            <Text>No account ? Register</Text>
+          </View>
         </TouchableOpacity>
       </View>
     </View>
@@ -57,24 +63,47 @@ const styles = StyleSheet.create({
   signuplogo: {
     display: "flex",
     justifyContent: "center",
+    alignItems: "center",
   },
 
   signupText: {
-    fontSize: 24,
+    fontSize: 22,
     color: "black",
     justifyContent: "center",
+    marginBottom: 100,
   },
 
   signupImg: {
+    marginTop: 20,
     justifyContent: "center",
     height: 100,
     width: 100,
   },
   inputDecoration: {
     borderBottomWidth: 2,
-    borderBottomColor: "pink",
+    borderBottomColor: "#FFBAC0",
     paddingBottom: 10,
     fontSize: 16,
     marginBottom: 40,
+  },
+
+  button: {
+    borderWidth: 3,
+    borderStyle: "solid",
+    borderColor: "#F9585E",
+    width: 200,
+    height: 60,
+    justifyContent: "center",
+    borderRadius: 40,
+  },
+
+  buttondetail: {
+    alignItems: "center",
+    color: "black",
+  },
+
+  account: {
+    marginTop: 20,
+    alignItems: "center",
   },
 });

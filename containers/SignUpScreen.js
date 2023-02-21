@@ -13,13 +13,7 @@ import {
 export default function SignUpScreen({ setToken }) {
   const navigation = useNavigation();
   return (
-    <View
-      style={
-        {
-          /*flexDirection: "column", justifyContent: "center"*/
-        }
-      }
-    >
+    <View style={{ flex: 1 }}>
       <View style={styles.signuplogo}>
         <Image
           style={styles.signupImg}
@@ -31,14 +25,15 @@ export default function SignUpScreen({ setToken }) {
 
       <View style={styles.signup}>
         <TextInput style={styles.inputDecoration} placeholder="email" />
+
+        <TextInput style={styles.inputDecoration} placeholder="username" />
+
         <TextInput
           multiline={true}
           numberOfLines={10}
           style={styles.inputDecorationText}
           placeholder="Describe yourself in a few words..."
         />
-
-        <TextInput style={styles.inputDecoration} placeholder="username" />
 
         <TextInput
           style={styles.inputDecoration}
@@ -54,6 +49,7 @@ export default function SignUpScreen({ setToken }) {
 
         <View style={styles.button}>
           <Button
+            style={styles.buttondetail}
             title="Sign up"
             onPress={async () => {
               const userToken = "secret-token";
@@ -66,7 +62,9 @@ export default function SignUpScreen({ setToken }) {
             navigation.navigate("SignIn");
           }}
         >
-          <Text style={styles.account}>Already have an account ? Sign in</Text>
+          <View style={styles.account}>
+            <Text>Already have an account ? Sign in</Text>
+          </View>
         </TouchableOpacity>
       </View>
     </View>
@@ -80,10 +78,13 @@ const styles = StyleSheet.create({
 
   signuplogo: {
     justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
   },
 
   signupText: {
-    fontSize: 24,
+    marginTop: 20,
+    fontSize: 22,
     color: "black",
     justifyContent: "center",
   },
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
 
   inputDecoration: {
     borderBottomWidth: 2,
-    borderBottomColor: "pink",
+    borderBottomColor: "#FFBAC0",
     paddingBottom: 10,
     fontSize: 16,
     marginBottom: 40,
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderWidth: 2,
     borderStyle: "solid",
-    borderColor: "pink",
+    borderColor: "#FFBAC0",
     height: 100,
     marginBottom: 40,
   },
@@ -115,16 +116,17 @@ const styles = StyleSheet.create({
   button: {
     borderWidth: 3,
     borderStyle: "solid",
-    borderColor: "pink",
+    borderColor: "#F9585E",
     width: 200,
     height: 60,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 40,
+    color: "black",
   },
 
   account: {
     marginTop: 20,
-    justifyContent: "center",
+    alignItems: "center",
   },
 });

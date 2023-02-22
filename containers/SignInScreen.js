@@ -13,25 +13,48 @@ import {
 } from "react-native";
 
 export default function SignInScreen({ setToken }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("sleiman@mail.com");
+  const [password, setPassword] = useState("sleiman");
+
+  const [error, setError] = useState("");
 
   const navigation = useNavigation();
 
-  const handleSubmit = async () => {
+  const submit = async () => {
     try {
+      setError("");
+      // 1 - FRONT Vérifier tous les champs sont remplis
+
+      if (!email || !password) {
+        setError("Remplir tous les champs ");
+        return;
+      }
+
+      alert("vérifications passées ! ");
+
       const response = await axios.post(
         "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/log_in",
         {
-          email,
-          password,
+          email: email,
+          password: password,
         }
       );
-      setToken(response.data.token);
-
       console.log(response.data);
+      if (response.data) {
+        setToken(response.data.token);
+      }
     } catch (error) {
-      console.log(error.response);
+      // 3 - BACK Vérifier que l'émail est valide
+      // 4 - BACK Vérifier que le password est valide
+      console.log(message);
+      const message = error.response.data.error;
+      const statusCode = error.response.status;
+
+      if (statusCode === 400) {
+        setError(message);
+      }
+
+      console.log(error);
     }
   };
 
@@ -51,12 +74,11 @@ export default function SignInScreen({ setToken }) {
           <TextInput
             style={styles.inputDecoration}
             placeholder="email"
-            onSubmit={handleSubmit}
             autoCapitalize="none"
             placeholderTextColor="#696969"
             value={email}
-            onChangeText={(text) => {
-              setEmail(text);
+            onChangeText={(input) => {
+              setEmail(input);
             }}
           />
 
@@ -66,17 +88,16 @@ export default function SignInScreen({ setToken }) {
             autoCapitalize="none"
             placeholderTextColor="#696969"
             secureTextEntry={true}
-            onChangeText={(text) => {
-              setPassword(text);
+            onChangeText={(input) => {
+              setPassword(input);
             }}
             value={password}
           />
           <View style={styles.button}>
             <TouchableOpacity
               style={styles.buttondetail}
-              onPress={async () => {
-                const userToken = "secret-token";
-                setToken(userToken);
+              onPress={() => {
+                submit();
               }}
             >
               <Text style={{ fontSize: 24, color: "grey" }}>Sign in</Text>

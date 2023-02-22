@@ -6,12 +6,6 @@ export default function HomeScreen() {
   return (
     <View>
       <Text>Welcome home!</Text>
-      <Button
-        title="Go to Profile"
-        onPress={() => {
-          navigation.navigate("Profile", { userId: 123 });
-        }}
-      />
     </View>
   );
 }

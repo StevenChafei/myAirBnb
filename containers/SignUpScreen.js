@@ -14,20 +14,37 @@ import {
 
 export default function SignUpScreen({ setToken }) {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const [description, setDescription] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [description, setDescription] = useState("steven");
+  const [password, setPassword] = useState("steven");
+  const [confirmPassword, setConfirmPassword] = useState("steven");
+
+  const [error, setError] = useState("");
+
   const navigation = useNavigation();
 
-  const handleSignup = async () => {
-    //   Je fais disparaitre le message d'erreur
-    setErrorMessage("");
+  const submit = async () => {
     try {
-      //   Requête axios :
-      // - Premier argument : l'url que j'interroge
-      // - deuxième : le body que j'envoie
+      setError("");
+      // 1 - FRONT Vérifier tous les champs sont remplis
+
+      if (
+        !email ||
+        !username ||
+        !password ||
+        !confirmPassword ||
+        !description
+      ) {
+        setError("Remplir tous les champs ");
+        // return;
+      }
+      // 2 - FRONT vérifier que les mdp soient identiques
+      if (password !== confirmPassword) {
+        setError("Les mots de passe ne sont pas identiques");
+      }
+
+      // alert("vérifications passées ! ");
+
       const response = await axios.post(
         "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/sign_up",
         {
@@ -35,31 +52,24 @@ export default function SignUpScreen({ setToken }) {
           username: username,
           description: description,
           password: password,
-          confirmPassword: confirmPassword,
         }
       );
-      //   Si je reçois bien un token
-      if (response.data.token) {
-        // Cookies.set("token-vinted", response.data.token, { expires: 14 });
-        // Je l'enregistre dans mon state et mes cookies
+      console.log(response.data);
+      if (response.data) {
         setToken(response.data.token);
-        // Et je redirige vers Home
       }
     } catch (error) {
-      //   console.log(error.message);
-      console.log(error.response.data);
+      // 3 - BACK Vérifier que l'émail soit dispo
+      // 4 - BACK Vérifier que les usernames soient dispo
 
-      console.log(error.response.status);
-      //   Si je reçois un message d'erreur "This email already has an account"
-      if (error.response.data.message === "This email already has an account") {
-        setErrorMessage(
-          "Cet email est déjà utilisé, veuillez créer un compte avec un mail valide."
-        );
+      const message = error.response.data.error;
+      const statusCode = error.response.status;
+
+      if (statusCode === 400) {
+        setError(message);
       }
-      //   Si je reçois un message d'erreur "Missing parameters"
-      if (error.response.data.message === "Missing parameters") {
-        setErrorMessage("Veuillez remplir tous les champs svp.");
-      }
+
+      console.log(error);
     }
   };
 
@@ -76,14 +86,13 @@ export default function SignUpScreen({ setToken }) {
         </View>
         <View style={styles.signup}>
           <TextInput
-            onSubmit={handleSignup}
             style={styles.inputDecoration}
             placeholder="email"
             autoCapitalize="none"
             placeholderTextColor="#696969"
             value={email}
-            onChangeText={(text) => {
-              setEmail(text);
+            onChangeText={(input) => {
+              setEmail(input);
             }}
           />
 
@@ -93,8 +102,8 @@ export default function SignUpScreen({ setToken }) {
             autoCapitalize="none"
             placeholderTextColor="#696969"
             value={username}
-            onChangeText={(text) => {
-              setUsername(text);
+            onChangeText={(input) => {
+              setUsername(input);
             }}
           />
 
@@ -105,8 +114,8 @@ export default function SignUpScreen({ setToken }) {
             placeholderTextColor="#696969"
             placeholder="Describe yourself in a few words..."
             value={description}
-            onChangeText={(text) => {
-              setDescription(text);
+            onChangeText={(input) => {
+              setDescription(input);
             }}
           />
 
@@ -116,8 +125,8 @@ export default function SignUpScreen({ setToken }) {
             autoCapitalize="none"
             placeholderTextColor="#696969"
             secureTextEntry={true}
-            onChangeText={(text) => {
-              setPassword(text);
+            onChangeText={(input) => {
+              setPassword(input);
             }}
             value={password}
           />
@@ -128,8 +137,8 @@ export default function SignUpScreen({ setToken }) {
             autoCapitalize="none"
             placeholderTextColor="#696969"
             secureTextEntry={true}
-            onChangeText={(text) => {
-              setConfirmPassword(text);
+            onChangeText={(input) => {
+              setConfirmPassword(input);
             }}
             value={confirmPassword}
           />
@@ -137,14 +146,14 @@ export default function SignUpScreen({ setToken }) {
           <View style={styles.button}>
             <TouchableOpacity
               style={styles.buttondetail}
-              onPress={async () => {
-                const userToken = "secret-token";
-                setToken(userToken);
+              onPress={() => {
+                submit();
               }}
             >
               <Text style={{ fontSize: 24, color: "grey" }}> Sign up</Text>
             </TouchableOpacity>
           </View>
+
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("SignIn");

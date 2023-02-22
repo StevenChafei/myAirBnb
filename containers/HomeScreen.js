@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/core";
 import React, { useState, useEffect } from "react";
-import { Button, Text, View, FlatList } from "react-native";
+import { Button, Text, View, FlatList, Image } from "react-native";
 import axios from "axios";
 
 export default function HomeScreen() {
@@ -34,17 +34,15 @@ export default function HomeScreen() {
         style={{ flexDirection: "column", alignContent: "center" }}
         data={data}
         keyExtractor={(item) => String(item._id)}
-        renderItem={({ item }) => {
-          return (
-            <Text style={{ margin: 20 }}>
-              {item.price}
-              {item.title}
-              {item.description}
-              {item.picture_id}
-              {item.user.account.username}
-            </Text>
-          );
-        }}
+        renderItem={({ item }) => (
+          <View>
+            <Image source={{ uri: item.photos[0].url }} />
+            <Text>{item.price}</Text>
+            <Text>{item.title}</Text>
+            <Text>{item.description}</Text>
+            <Text> {item.user.account.username}</Text>
+          </View>
+        )}
       />
     </View>
   );

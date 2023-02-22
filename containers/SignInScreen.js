@@ -1,9 +1,9 @@
 import { useNavigation } from "@react-navigation/core";
 import { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import axios from "axios";
 
 import {
-  Button,
   Text,
   TextInput,
   View,
@@ -17,9 +17,27 @@ export default function SignInScreen({ setToken }) {
   const [password, setPassword] = useState("");
 
   const navigation = useNavigation();
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post(
+        "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/log_in",
+        {
+          email,
+          password,
+        }
+      );
+      setToken(response.data.token);
+
+      console.log(response.data);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
   return (
     <KeyboardAwareScrollView>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: "white" }}>
         <View style={styles.signup}>
           <View style={styles.signuplogo}>
             <Image
@@ -33,13 +51,25 @@ export default function SignInScreen({ setToken }) {
           <TextInput
             style={styles.inputDecoration}
             placeholder="email"
+            onSubmit={handleSubmit}
+            autoCapitalize="none"
+            placeholderTextColor="#696969"
             value={email}
+            onChangeText={(text) => {
+              setEmail(text);
+            }}
           />
 
           <TextInput
             style={styles.inputDecoration}
             placeholder="password"
+            autoCapitalize="none"
+            placeholderTextColor="#696969"
             secureTextEntry={true}
+            onChangeText={(text) => {
+              setPassword(text);
+            }}
+            value={password}
           />
           <View style={styles.button}>
             <TouchableOpacity

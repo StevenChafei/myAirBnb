@@ -1,9 +1,9 @@
 import { useNavigation } from "@react-navigation/core";
 import { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import axios from "axios";
 
 import {
-  Button,
   Text,
   TextInput,
   View,
@@ -15,12 +15,57 @@ import {
 export default function SignUpScreen({ setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [description, setDescription] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigation = useNavigation();
+
+  const handleSignup = async () => {
+    //   Je fais disparaitre le message d'erreur
+    setErrorMessage("");
+    try {
+      //   Requête axios :
+      // - Premier argument : l'url que j'interroge
+      // - deuxième : le body que j'envoie
+      const response = await axios.post(
+        "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/sign_up",
+        {
+          email: email,
+          username: username,
+          description: description,
+          password: password,
+          confirmPassword: confirmPassword,
+        }
+      );
+      //   Si je reçois bien un token
+      if (response.data.token) {
+        // Cookies.set("token-vinted", response.data.token, { expires: 14 });
+        // Je l'enregistre dans mon state et mes cookies
+        setToken(response.data.token);
+        // Et je redirige vers Home
+      }
+    } catch (error) {
+      //   console.log(error.message);
+      console.log(error.response.data);
+
+      console.log(error.response.status);
+      //   Si je reçois un message d'erreur "This email already has an account"
+      if (error.response.data.message === "This email already has an account") {
+        setErrorMessage(
+          "Cet email est déjà utilisé, veuillez créer un compte avec un mail valide."
+        );
+      }
+      //   Si je reçois un message d'erreur "Missing parameters"
+      if (error.response.data.message === "Missing parameters") {
+        setErrorMessage("Veuillez remplir tous les champs svp.");
+      }
+    }
+  };
 
   return (
     <KeyboardAwareScrollView>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: "white" }}>
         <View style={styles.signuplogo}>
           <Image
             style={styles.signupImg}
@@ -29,29 +74,47 @@ export default function SignUpScreen({ setToken }) {
           />
           <Text style={styles.signupText}>Sign up</Text>
         </View>
-
         <View style={styles.signup}>
           <TextInput
+            onSubmit={handleSignup}
             style={styles.inputDecoration}
             placeholder="email"
+            autoCapitalize="none"
+            placeholderTextColor="#696969"
             value={email}
             onChangeText={(text) => {
               setEmail(text);
             }}
           />
 
-          <TextInput style={styles.inputDecoration} placeholder="username" />
+          <TextInput
+            style={styles.inputDecoration}
+            placeholder="username"
+            autoCapitalize="none"
+            placeholderTextColor="#696969"
+            value={username}
+            onChangeText={(text) => {
+              setUsername(text);
+            }}
+          />
 
           <TextInput
             multiline={true}
             numberOfLines={10}
             style={styles.inputDecorationText}
+            placeholderTextColor="#696969"
             placeholder="Describe yourself in a few words..."
+            value={description}
+            onChangeText={(text) => {
+              setDescription(text);
+            }}
           />
 
           <TextInput
             style={styles.inputDecoration}
             placeholder="password"
+            autoCapitalize="none"
+            placeholderTextColor="#696969"
             secureTextEntry={true}
             onChangeText={(text) => {
               setPassword(text);
@@ -62,6 +125,8 @@ export default function SignUpScreen({ setToken }) {
           <TextInput
             style={styles.inputDecoration}
             placeholder="confirm password"
+            autoCapitalize="none"
+            placeholderTextColor="#696969"
             secureTextEntry={true}
             onChangeText={(text) => {
               setConfirmPassword(text);

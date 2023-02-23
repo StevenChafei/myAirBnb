@@ -6,7 +6,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import "react-native-gesture-handler";
-import { createStackNavigator } from "@react-navigation/stack";
+// import { createStackNavigator } from "@react-navigation/stack";
 
 // ICONS
 
@@ -17,7 +17,7 @@ import { Feather } from "@expo/vector-icons";
 //SCREENS
 
 import HomeScreen from "./containers/HomeScreen";
-import HomeDetailScreen from "./containers/HomeDetailScreen";
+import RoomScreen from "./containers/RoomScreen";
 import MapScreen from "./containers/MapScreen";
 import ProfileScreen from "./containers/ProfileScreen";
 import SignInScreen from "./containers/SignInScreen";
@@ -109,18 +109,17 @@ export default function App() {
                           headerTitleStyle: { color: "white" },
                         }}
                       >
-                        {() => <HomeScreen />}
+                        {(props) => <HomeScreen {...props} />}
                       </Stack.Screen>
 
                       <Stack.Screen
-                        name="HomeDetail"
+                        name="Room"
                         options={{
-                          // title: "My App",
                           // headerStyle: { backgroundColor: "grey" },
                           headerTitleStyle: { color: "white" },
                         }}
                       >
-                        {() => <HomeDetailScreen />}
+                        {(props) => <RoomScreen {...props} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
@@ -150,15 +149,6 @@ export default function App() {
                       >
                         {() => <MapScreen />}
                       </Stack.Screen>
-
-                      {/* <Stack.Screen
-                        name="Profile"
-                        options={{
-                          title: "User Profile",
-                        }}
-                      >
-                        {() => <ProfileScreen setToken={setToken} />}
-                      </Stack.Screen> */}
                     </Stack.Navigator>
                   )}
                 </Tab.Screen>

@@ -1,6 +1,8 @@
 import { useNavigation } from "@react-navigation/core";
 import React, { useState, useEffect } from "react";
 
+import { Entypo } from "@expo/vector-icons";
+
 import {
   Button,
   Text,
@@ -9,13 +11,20 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  useWindowDimensions,
+  ImageBackground,
 } from "react-native";
+
 import axios from "axios";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState({});
+  const [data, setData] = useState(null);
+
+  const { height, width } = useWindowDimensions();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,7 +32,7 @@ export default function HomeScreen() {
         const response = await axios.get(
           `https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms`
         );
-        console.log(response.data);
+        // console.log(response.data);
         // Je stocke le résultat dans data
         setData(response.data);
         // Je fais paser isLoading à false
@@ -35,7 +44,23 @@ export default function HomeScreen() {
     fetchData();
   }, []);
 
-  return (
+  const generateStars = (ratingValue) => {
+    const starsArray = [];
+    for (let i = 0; i < 5; i++) {
+      if (i < ratingValue) {
+        starsArray.push(
+          <Entypo name="star" size={24} color="#FFB100" key={i} />
+        );
+      } else {
+        starsArray.push(<Entypo name="star" size={24} color="grey" key={i} />);
+      }
+    }
+    return starsArray;
+  };
+
+  return isLoading === true ? (
+    <ActivityIndicator />
+  ) : (
     <View style={{ backgroundColor: "white" }}>
       <View style={{ alignItems: "center" }}>
         <Image
@@ -50,28 +75,36 @@ export default function HomeScreen() {
         data={data}
         keyExtractor={(item) => String(item._id)}
         renderItem={({ item }) => (
-          <View>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("HomeDetailScreen");
-              }}
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Room", { roomId: item._id });
+            }}
+          >
+            <ImageBackground
+              style={[styles.photos, { width: width * 0.9 }]}
+              source={{ uri: item.photos[0].url }}
             >
-              <Image
-                style={styles.photos}
-                source={{ uri: item.photos[0].url }}
-              />
-            </TouchableOpacity>
+              <View>
+                <Text style={styles.price}>{item.price} €</Text>
+              </View>
+            </ImageBackground>
 
-            <Text style={styles.price}>{item.price} €</Text>
             <Text numberOfLines={1} style={styles.title}>
               {item.title}
             </Text>
+
             <Image
               style={styles.avatar}
               source={{ uri: `${item.user.account.photo.url}` }}
             />
-            <Text style={styles.ratingValue}>{item.ratingValue}</Text>
-          </View>
+
+            <View style={styles.allreviews}>
+              <Text style={styles.ratingValue}>
+                {generateStars(item.ratingValue)}
+              </Text>
+              <Text style={styles.value}>{item.reviews} reviews</Text>
+            </View>
+          </TouchableOpacity>
         )}
       />
     </View>
@@ -89,15 +122,14 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignContent: "center",
     marginTop: 20,
-    marginHorizontal: 15,
+    marginHorizontal: 20,
     // borderBottomWidth: 2,
     // borderBottomColor: "black",
   },
 
   photos: {
-    width: "100%",
-    height: 200,
-    position: "relative",
+    height: 220,
+    justifyContent: "flex-end",
   },
 
   price: {
@@ -106,9 +138,9 @@ const styles = StyleSheet.create({
     color: "white",
     width: 100,
     padding: 10,
-    position: "absolute",
-    bottom: 120,
+    alignItems: "center",
     justifyContent: "center",
+    marginBottom: 10,
   },
 
   title: {
@@ -117,10 +149,19 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
 
+  allreviews: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+
+  value: {
+    color: "grey",
+    paddingLeft: 10,
+  },
+
   ratingValue: {
-    marginVertical: 15,
-    // borderBottomWidth: 2,
-    // borderBottomColor: "black",
+    paddingBottom: 5,
   },
 
   avatar: {

@@ -5,6 +5,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import "react-native-gesture-handler";
+import { createStackNavigator } from "@react-navigation/stack";
 
 // ICONS
 
@@ -15,6 +17,7 @@ import { Feather } from "@expo/vector-icons";
 //SCREENS
 
 import HomeScreen from "./containers/HomeScreen";
+import HomeDetailScreen from "./containers/HomeDetailScreen";
 import MapScreen from "./containers/MapScreen";
 import ProfileScreen from "./containers/ProfileScreen";
 import SignInScreen from "./containers/SignInScreen";
@@ -24,6 +27,7 @@ import SplashScreen from "./containers/SplashScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+// const myStack = createStackNavigator();
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -100,22 +104,24 @@ export default function App() {
                       <Stack.Screen
                         name="Home"
                         options={{
-                          title: "My App",
-                          headerStyle: { backgroundColor: "grey" },
+                          // title: "My App",
+                          // headerStyle: { backgroundColor: "grey" },
                           headerTitleStyle: { color: "white" },
                         }}
                       >
                         {() => <HomeScreen />}
                       </Stack.Screen>
 
-                      {/* <Stack.Screen
-                        name="Profile"
+                      <Stack.Screen
+                        name="HomeDetail"
                         options={{
-                          title: "User Profile",
+                          // title: "My App",
+                          // headerStyle: { backgroundColor: "grey" },
+                          headerTitleStyle: { color: "white" },
                         }}
                       >
-                        {() => <ProfileScreen />}
-                      </Stack.Screen> */}
+                        {() => <HomeDetailScreen />}
+                      </Stack.Screen>
                     </Stack.Navigator>
                   )}
                 </Tab.Screen>

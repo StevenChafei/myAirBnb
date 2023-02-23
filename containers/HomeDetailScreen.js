@@ -1,27 +1,27 @@
+import { useRoute } from "@react-navigation/core";
 import { useNavigation } from "@react-navigation/core";
-import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 import {
-  Button,
   Text,
   View,
-  FlatList,
+  Button,
   Image,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import axios from "axios";
 
-export default function HomeScreen() {
+export default function HomeDetailScreen() {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
+  const [userToken, setUserToken] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms`
+          `https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms${id}`
         );
         console.log(response.data);
         // Je stocke le résultat dans data
@@ -36,32 +36,14 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <View style={{ backgroundColor: "white" }}>
-      <View style={{ alignItems: "center" }}>
-        <Image
-          style={styles.logo}
-          source={require("../assets/logoairbnb.png")}
-          resizeMode="contain"
-        />
-      </View>
-
+    <View>
       <FlatList
         style={styles.allConfig}
         data={data}
         keyExtractor={(item) => String(item._id)}
         renderItem={({ item }) => (
           <View>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("HomeDetailScreen");
-              }}
-            >
-              <Image
-                style={styles.photos}
-                source={{ uri: item.photos[0].url }}
-              />
-            </TouchableOpacity>
-
+            <Image style={styles.photos} source={{ uri: item.photos[0].url }} />
             <Text style={styles.price}>{item.price} €</Text>
             <Text numberOfLines={1} style={styles.title}>
               {item.title}
@@ -78,20 +60,11 @@ export default function HomeScreen() {
   );
 }
 const styles = StyleSheet.create({
-  logo: {
-    width: 50,
-    height: 50,
-    alignItems: "center",
-    marginTop: 10,
-  },
-
   allConfig: {
     flexDirection: "column",
     alignContent: "center",
     marginTop: 20,
     marginHorizontal: 15,
-    // borderBottomWidth: 2,
-    // borderBottomColor: "black",
   },
 
   photos: {
@@ -108,7 +81,6 @@ const styles = StyleSheet.create({
     padding: 10,
     position: "absolute",
     bottom: 120,
-    justifyContent: "center",
   },
 
   title: {
@@ -119,8 +91,6 @@ const styles = StyleSheet.create({
 
   ratingValue: {
     marginVertical: 15,
-    // borderBottomWidth: 2,
-    // borderBottomColor: "black",
   },
 
   avatar: {

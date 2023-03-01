@@ -133,23 +133,28 @@ export default function App() {
                     tabBarLabel: "Around me",
 
                     tabBarIcon: ({ color, size }) => (
-                      <Feather name="map-pin" size={24} color="black" />
+                      <Feather name="map-pin" size={size} color={color} />
                     ),
                   }}
                 >
                   {() => (
                     <Stack.Navigator>
-                      <Stack.Screen
-                        name="Around me"
-                        options={{
-                          title: "My map",
-                          headerStyle: { backgroundColor: "grey" },
-                          headerTitleStyle: { color: "white" },
-                        }}
-                      >
-                        {() => <MapScreen />}
-                      </Stack.Screen>
+                      <Stack.Screen name="Around Me" component={MapScreen} />
+                      <Stack.Screen name="Room" component={RoomScreen} />
                     </Stack.Navigator>
+
+                    // <Stack.Navigator>
+                    //   <Stack.Screen
+                    //     name="Around me"
+                    //     options={{
+                    //       title: "My map",
+                    //       headerStyle: { backgroundColor: "grey" },
+                    //       headerTitleStyle: { color: "white" },
+                    //     }}
+                    //   >
+                    //     {() => <MapScreen />}
+                    //   </Stack.Screen>
+                    // </Stack.Navigator>
                   )}
                 </Tab.Screen>
 
@@ -160,7 +165,7 @@ export default function App() {
                   options={{
                     tabBarLabel: "My profile",
                     tabBarIcon: ({ color, size }) => (
-                      <Octicons name="person" size={24} color="black" />
+                      <Octicons name="person" size={size} color={color} />
                     ),
                   }}
                 >
@@ -174,49 +179,22 @@ export default function App() {
                           headerTitleStyle: { color: "white" },
                         }}
                       >
-                        {(props) => <ProfileScreen {...props} />}
+                        {(props) => (
+                          <ProfileScreen setToken={setToken} {...props} />
+                        )}
                       </Stack.Screen>
 
-                      <Stack.Screen
+                      {/* <Stack.Screen
                         name="Settings"
                         options={{
                           title: "User Settings",
                         }}
                       >
                         {() => <SettingsScreen setToken={setToken} />}
-                      </Stack.Screen>
+                      </Stack.Screen> */}
                     </Stack.Navigator>
                   )}
                 </Tab.Screen>
-
-                {/* SETTINGS  */}
-
-                {/* <Tab.Screen
-                  name="TabSettings"
-                  options={{
-                    tabBarLabel: "Settings",
-                    tabBarIcon: ({ color, size }) => (
-                      <Ionicons
-                        name={"ios-options"}
-                        size={size}
-                        color={color}
-                      />
-                    ),
-                  }}
-                >
-                  {() => (
-                    <Stack.Navigator>
-                      <Stack.Screen
-                        name="Settings"
-                        options={{
-                          title: "Settings",
-                        }}
-                      >
-                        {() => <SettingsScreen setToken={setToken} />}
-                      </Stack.Screen>
-                    </Stack.Navigator>
-                  )}
-                </Tab.Screen> */}
               </Tab.Navigator>
             )}
           </Stack.Screen>

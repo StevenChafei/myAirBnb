@@ -10,6 +10,11 @@ import Swiper from "react-native-swiper";
 
 import ReadMore from "@fawazahmed/react-native-read-more";
 
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+// import * as Location from "expo-location";
+
+const arrayOfMarkers = [];
+
 const RoomScreen = ({ route }) => {
   // console.log(route);
   const roomId = route.params.roomId;
@@ -70,7 +75,7 @@ const RoomScreen = ({ route }) => {
         >
           {data.photos.map((slide) => {
             return (
-              <View style={styles.slide}>
+              <View key={slide.url} style={styles.slide}>
                 <Image
                   source={{ uri: slide.url }}
                   style={{ height: "100%", width: "100%" }}
@@ -97,10 +102,36 @@ const RoomScreen = ({ route }) => {
           </View>
 
           <View>
-            <ReadMore numberOfLines={3} style={styles.description}>
+            <ReadMore
+              numberOfLines={3}
+              seeMoreStyle={{ color: "salmon" }}
+              seeLessStyle={{ color: "salmon" }}
+              style={styles.description}
+            >
               <Text>{data.description}</Text>
             </ReadMore>
           </View>
+        </View>
+
+        <View style={styles.container}>
+          <MapView
+            style={styles.map}
+            showsUserLocation
+            provider={PROVIDER_GOOGLE}
+            initialRegion={{
+              latitude: data.location[1],
+              longitude: data.location[0],
+              latitudeDelta: 0.02,
+              longitudeDelta: 0.04,
+            }}
+          >
+            <Marker
+              coordinate={{
+                latitude: data.location[1],
+                longitude: data.location[0],
+              }}
+            />
+          </MapView>
         </View>
       </ScrollView>
     </View>
@@ -160,4 +191,10 @@ const styles = StyleSheet.create({
   },
 
   // MAP SETTINGS
+
+  map: {
+    marginTop: 20,
+    height: 500,
+    width: "100%",
+  },
 });

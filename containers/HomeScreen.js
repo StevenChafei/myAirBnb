@@ -17,6 +17,7 @@ import {
 
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -61,6 +62,7 @@ export default function HomeScreen() {
   return isLoading === true ? (
     <ActivityIndicator />
   ) : (
+    // <ScrollView>
     <View style={{ backgroundColor: "white" }}>
       <View style={{ alignItems: "center" }}>
         <Image
@@ -108,6 +110,7 @@ export default function HomeScreen() {
         )}
       />
     </View>
+    // </ScrollView>
   );
 }
 const styles = StyleSheet.create({

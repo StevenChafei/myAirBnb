@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/core";
 import { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 import {
@@ -54,6 +55,21 @@ export default function SignInScreen({ setToken }) {
         setError(message);
       }
 
+      console.log(error);
+    }
+  };
+
+  const value = {
+    email: email,
+    username: username,
+    description: description,
+  };
+
+  const storeUser = async () => {
+    try {
+      await AsyncStorage.setItem("user", JSON.stringify(value));
+      console.log(value);
+    } catch (error) {
       console.log(error);
     }
   };
